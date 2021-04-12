@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Nanum+Gothic&family=Nanum+Myeongjo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title><%= title %></title>
+    <style>
+    body {
+      width:100%;
+      height:100%;
+      padding-top: 7%;
+      padding-left: 21%;
+      padding-bottom: 13%;
+      background-repeat:no-repeat;
+        background:linear-gradient(to bottom right, #000033, #1E3269);
+     }
+
+    .Button{
+
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      text-align:center;
+      font-size:25px;
+      vertical-align:middle;
+
+      margin-left: 50%;
+      font-family: 'Do Hyeon', sans-serif;
+
+    }
+
+
+    </style>
+
+    <script>
+    const socket = io('/');
+
+
+    function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+          x = val[i].substr(0, val[i].indexOf('='));
+          y = val[i].substr(val[i].indexOf('=') + 1);
+          x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+          if (x == cookie_name) {
+            return unescape(y); // unescape로 디코딩 후 값 리턴
+          }
+        }
+      }
+        var c = getCookie("id");
+
+
+        var r;
+        function func(){
+        window.location.href = 'https://192.168.219.101:3001?name='+c+'&room='+r;
+        }
+
+        function fun(){
+        r = document.getElementById("search").value;
+        window.location.href =  'https://192.168.219.101:3001?name='+c+'&room='+r;
+        }
+
+
+
+    </script>
+
+
+</head>
+<body>
+  <table>
+
+    <div id="welcome" style="color:white; font-family: 'Do Hyeon', sans-serif; font-size:50px;margin-left:22%; margin-bottom:3%"></div>
+
+    <script>
+      function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+          x = val[i].substr(0, val[i].indexOf('='));
+          y = val[i].substr(val[i].indexOf('=') + 1);
+          x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+          if (x == cookie_name) {
+            return unescape(y); // unescape로 디코딩 후 값 리턴
+          }
+        }
+      }
+        var c = getCookie("id");
+
+      document.getElementById("welcome").innerHTML = "안녕하세요   "+c+"  님  ";
+    </script>
+    <div class="search">
+      <h2 class="tt" style="font-family: 'Do Hyeon', sans-serif; color:white; margin-left:20%">채팅방 이름을 입력해 입장하세요!</h2>
+    </div>
+
+    <div style="font-family: 'Do Hyeon', sans-serif; color:white; margin-bottom:5%; margin-left:20%">
+      <input style="width:300px" id="search" type="text" name="search" placeholder="입장할 방 이름을 입력하세요">
+      <button type="button" onclick = "fun()" id="button">입장하기</button>
+    </div>
+    <tr colspan="3">
+
+      <td><div><button class ="Button" type="button" onclick="location.href='chat'" style="background-color:#8ED0FD;border: 3px solid #8ED0FD;margin-right: 30px">회의록 조회</button></div></td>
+      <td><div><button class ="Button" type="button" onclick="func()" style="background-color:#FF6F6F;border: 3px solid #FF6F6F;margin-right: 30px" >채팅방 입장</button></div></td>
+      <td>  <div ><form action="/logout" method="post">
+            <button class ="Button" type="submit" style="background-color:#FEDD6E;border: 3px solid #FEDD6E;margin-right: 30px">로그아웃</button>
+        </form>
+      </div>
+    </td>
+    </tr>
+
+  </table>
+
+
+
+
+
+</body>
+</html>

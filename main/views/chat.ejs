@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/socket.io/socket.io.js"></script>
+      <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Nanum+Gothic&family=Nanum+Myeongjo&display=swap" rel="stylesheet">
+    <style>
+    body {
+      width:100%;
+      height:100%;
+      padding-top: 1%;
+      padding-bottom: 2%;
+      background-repeat:no-repeat;
+      background:linear-gradient(to bottom right, #000033, #1E3269);
+      font-family: 'Do Hyeon', sans-serif;
+     }
+
+    #container {
+          width: 250px;
+          height: 500px;
+          background-color: white;
+          margin-left: 3%;
+
+      }
+
+      #container1 {
+            width: 750px;
+            height: 500px;
+            background-color: white;
+
+            text-align:left;
+        }
+
+      #roomlink {
+          width: inherit;
+          height: inherit;
+          margin-left: 15px;
+          overflow-y: scroll;
+
+      }
+      #chatView {
+
+        overflow-y:scroll;
+        height: inherit;
+        width:inherit;
+        margin-left: 1%;
+      }
+
+    </style>
+    <script>
+
+var getParameters = function (paramName) {
+
+    var returnValue;
+    var url = location.href;
+    var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
+
+    for (var i = 0; i < parameters.length; i++) {
+        var varName = parameters[i].split('=')[0];
+        if (varName.toUpperCase() == paramName.toUpperCase()) {
+            returnValue = parameters[i].split('=')[1];
+            return decodeURIComponent(returnValue);
+        }
+    }
+  }
+  var id=(getParameters('roomid'));
+  //alert(id);
+
+
+    const socket = io('/');
+
+    socket.on('connected', function(data) {
+
+      if(id != null){
+        socket.emit('content',id);
+      }
+
+      socket.on('content2', function(data) {
+        document.getElementById("chatView").innerHTML+=  data;
+
+     });
+
+     socket.on('content3', function(data) {
+       document.getElementById("chatdate").innerHTML+=  data;
+
+    });
+
+    socket.on('room_count', function(data) {
+      document.getElementById("room_count").innerHTML+= data;
+
+   });
+
+        function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+          x = val[i].substr(0, val[i].indexOf('='));
+          y = val[i].substr(val[i].indexOf('=') + 1);
+          x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+          if (x == cookie_name) {
+            return unescape(y); // unescape로 디코딩 후 값 리턴
+          }
+        }
+      }
+        var c=getCookie("id");
+      socket.emit('send',c);
+
+    });
+
+    socket.on('send2', function(data) {
+
+      var text="";
+       text += "<a href='http://localhost:3000/chat?roomid="+data+" ' id='link'>"
+        text += data
+        text += "</a><br><br>";
+
+    document.getElementById("roomlink").innerHTML+=text;
+  });
+
+    </script>
+
+    <title>chat</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <td style="width:11%" ><div onclick="location.href='/'" style="font-size: 40px; color:#FDDB72; margin-left:10%; margin-bottom:55%;"><i class="fas fa-folder"></i><br>로그<br>아웃</td>
+        <td style="width:11%" ><div onclick="location.href='/main'" style="font-size: 40px; color:#FDDB72; margin-left:10%; margin-bottom:55%;"><i class="fas fa-folder"></i><br>뒤로<br>가기</td>
+
+
+  <td style="width:56%">
+    <h1 style="color:white; margin-left: 35px;">채팅 내용</h1>
+    <p style="color:white; margin-left: 35px;" id="chatdate">채팅 날짜: </p>
+    <div>
+
+        <div style="border-right: auto; border-color: black; font-family: 'Do Hyeon', sans-serif; color: black; " id="container1">
+        <div style="font-family: 'Do Hyeon' sans-serif; color: black;" id="chatView"></div>
+    </div>
+    <div>
+  </td>
+
+  <td style="width:22%">
+    <h1 style="color:white; margin-left: 45px;">채팅 목록</h1>
+    <p style="color:white; margin-left: 45px;font-size:17px" id="room_count">채팅 목록 갯수:   </p>
+    <div>
+    <div style="font-family: 'Do Hyeon', sans-serif; color: black; margin-left: 35px;" id="container">
+    <div style="font-family: 'Do Hyeon' sans-serif; color: black;" id="roomlink"></div>
+  </div>
+</div>
+  </td>
+
+  </tr></table>
+
+
+
+
+
+</body>
+</html>

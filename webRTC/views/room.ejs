@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script>
+      const ROOM_ID = '<%= roomId %>';
+    </script>
+    <script
+      defer
+      src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"
+    ></script>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Nanum+Gothic&family=Nanum+Myeongjo&display=swap" rel="stylesheet">
+    <title>채팅방</title>
+    <style>
+      body{
+        width:100%;
+         height:100%;
+         margin: 0;
+          padding-top: 25px;
+          padding-bottom: 40px;
+          font-family: 'Nanum Myeongjo', serif;
+          background-repeat: no-repeat;
+          background:linear-gradient(to bottom right, #000033, #1E3269);
+      }
+      #video-container-0{
+        background: #FF6F6F;
+        border-radius: 30px;
+        margin: 20px
+      }
+      #video-container-1{
+        background: #8ED0FD;
+        border-radius: 30px;
+        margin: 20px
+      }
+
+
+      video {
+        width: 95%;
+        height: 95%;
+        object-fit: cover;
+        margin-left: : 3px;
+        margin-right: : 3px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border-radius: 30px;
+
+      }
+
+      #container {
+            width: 100%;
+            height: 500px;
+            border: 5px solid #D6D6D6;
+            background: white;
+
+        }
+        #chatView {
+            height: 90%;
+            overflow-y: scroll;
+            border-radius: 50px;
+            margin: 5px
+
+        }
+        #chatForm {
+            height: 10%;
+
+            border-top: 5px solid #D6D6D6;
+            text-align: center;
+        }
+        #msg {
+            width: 80%;
+            height: 20px;
+            border-radius: 8px;
+            border: 1px solid #D6D6D6;
+
+        }
+        #send {
+            width: 10%;
+            height: 70%;
+            border-radius: 30px;
+            background: #D6D6D6;
+            border: 1px solid #D6D6D6;
+            color: white;
+            font-size: 18px;
+            font-family: 'Do Hyeon', sans-serif;;
+        }
+        #tts {
+            width: 5%;
+            height: 30%;
+            border-radius: 50px;
+            background: black;
+            color: white;
+        }
+        #searchBox {
+          width: 40%;
+          height: 40px;
+          border-radius: 8px;
+          border: 3px solid #D6D6D6;
+          background: #D6D6D6;
+          margin: auto;
+          font-family: 'Nanum Gothic', sans-serif;
+
+        }
+        #searchButton{
+          width: 15%;
+          height: 25px;
+          border-radius: 40px;
+          background: #D6D6D6;
+          border: 3px solid #F6F6F6;
+          color: white;
+          margin-top: 1%;
+          font-family: 'Do Hyeon', sans-serif;;
+        }
+        #input{
+          color: #666;  z-index: 2;  border: 0 none;
+          font-family: 'Do Hyeon', sans-serif;
+        }
+        #Button{
+          width: 10%;
+          height: 40px;
+          border-radius: 50px;
+          background: #D6D6D6;
+          border: 3px solid #D6D6D7;
+          color: white;
+          margin: auto;
+          margin-right: 10px;
+          font-weight: bold;
+          font-size: 20px;
+          font-weight: lighter;
+          font-family: 'Do Hyeon', sans-serif;;
+        }
+
+        [data-tooltip-text]:hover {
+     position: relative;
+  }
+
+  [data-tooltip-text]:after {
+     -webkit-transition: bottom .3s ease-in-out, opacity .3s ease-in-out;
+     -moz-transition: bottom .3s ease-in-out, opacity .3s ease-in-out;
+     transition: bottom .3s ease-in-out, opacity .3s ease-in-out;
+
+     background-color: rgba(0, 0, 0, 0.8);
+
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+     -moz-box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+     box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+
+    -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+     border-radius: 5px;
+
+    color: #FFFFFF;
+     font-size: 12px;
+    font-family: 'Nanum Gothic', sans-serif;
+     margin-top: 10px;
+     padding: 7px 12px;
+     position: absolute;
+     width: auto;
+     min-width: 100px;
+     max-width: 500px;
+     word-wrap: break-word;
+
+     z-index: 9999;
+
+     opacity: 0;
+     left: -9999px;
+    top: 90%;
+
+     content: attr(data-tooltip-text);
+  }
+
+  [data-tooltip-text]:hover:after {
+     top: 130%;
+     left: 0;
+     opacity: 1;
+  }
+
+  #backButton{
+    width:50px;
+    height:25px;
+    border-radius:10%;
+    text-align:center;
+    font-size:15px;
+    vertical-align:middle;
+    background-color:#FEDD6E;
+    margin: auto;
+    margin-bottom: 10px;
+
+    font-family: 'Do Hyeon', sans-serif;
+  }
+
+    </style>
+
+    <script>
+
+        function slowly(){
+          socket.emit('ff',"s");
+        }
+        function correct(){
+          socket.emit('ff',"c");
+        }
+        function please(){
+          socket.emit('ff',"p");
+        }
+       
+    </script>
+</head>
+  <body>
+
+<table width="100%" style="text-align:center; border:none">
+      <tr>
+      <td colspan="3" margin = "1px">
+        <input id="backButton" type="button" name="버튼" value="나가기" onclick="location.href='javascript:history.go(-1)'";>
+        <div class="search" id="searchBox">
+          <form action="/room" method="post">
+        <input id="input" type="text" name= "id" placeholder="초대할 아이디 검색"
+        style="width:80%;height:80%; font-size:15px; border-radius: 40px;">
+        <button id="searchButton" type="submit">검색</button>
+        </form>
+       </div>
+     </td>
+    </tr>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td colspan="3" margin = "1%">
+
+        <button id="Button" onclick="slowly()">천천히 말해줘</button>
+        <button id="Button" onclick="correct()">정확히 말해줘</button>
+        <button id="Button" onclick="please()">잠깐만 기다려</button>
+      </td>
+    </tr>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td style="width:30%">
+        <script src="/socket.io/socket.io.js"></script>
+         <div class="video" id="video-container-0" style="font-family: 'Do Hyeon', sans-serif;">내 화면</div>
+      </td>
+
+      <td style="width:40%" rowspan="2">
+        <script src="/socket.io/socket.io.js"></script>
+        <div id="container">
+          <div id="chatView"></div>
+          <form id="chatForm" onsubmit="return false">
+              <input type="text" id="msg">
+              <input type="submit" id="send" value="전송">
+              <input data-tooltip-text="음성으로 메세지 전송" type="checkbox" id="tts" value="음성">
+          </form>
+        </div>
+      </td>
+
+      <td style="width:30%">
+        <script src="/socket.io/socket.io.js"></script>
+         <div class="video" id="video-container-1" style="font-family: 'Do Hyeon', sans-serif;">사용자</div>
+      </td>
+    </tr>
+
+
+
+</table>
+
+  </body>
+</html>
